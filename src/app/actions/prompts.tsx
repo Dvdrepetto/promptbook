@@ -1,8 +1,19 @@
 'use server'
 
-import { supabase } from '@/lib/supabaseClient'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 
 export async function createPrompt(formData: FormData) {
+    const supabase = await createClient()
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+        redirect('/login')
+    }
+
     const title = formData.get('title') as string
     const prompt = formData.get('prompt') as string
     const tool = formData.get('tool') as string
@@ -18,7 +29,8 @@ export async function createPrompt(formData: FormData) {
     })
 
     if (error) {
-        console.error(error)
-        throw new Error('Error inserting prompt')
+        throw new Error(error.message)
     }
+
+    redirect('/explore')
 }

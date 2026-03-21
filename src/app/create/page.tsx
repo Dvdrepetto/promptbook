@@ -1,32 +1,43 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 import { createPrompt } from '../actions/prompts'
 
-export default function CreatePage() {
+export default async function CreatePage() {
+    const supabase = await createClient()
+    const {
+        data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+        redirect('/login')
+    }
+
     return (
-        <form action={createPrompt} className="max-w-xl mx-auto p-4 space-y-4">
+        <form action={createPrompt} className="max-w-xl space-y-4">
             <h1 className="text-2xl font-bold">Crear Prompt</h1>
 
             <input
                 name="title"
                 placeholder="Título"
-                className="w-full border p-2 rounded"
+                className="w-full rounded border p-2"
                 required
             />
 
             <textarea
                 name="prompt"
                 placeholder="Escribe tu prompt..."
-                className="w-full border p-2 rounded h-40"
+                className="h-40 w-full rounded border p-2"
                 required
             />
 
-            <select name="tool" className="w-full border p-2 rounded">
+            <select name="tool" className="w-full rounded border p-2">
                 <option value="">Selecciona herramienta</option>
                 <option value="dalle">DALL·E</option>
                 <option value="midjourney">Midjourney</option>
                 <option value="stable_diffusion">Stable Diffusion</option>
             </select>
 
-            <button className="bg-black text-white px-4 py-2 rounded">
+            <button className="rounded bg-white px-4 py-2 text-black">
                 Publicar
             </button>
         </form>
