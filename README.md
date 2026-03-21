@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Promptbook
 
-## Getting Started
+Promptbook is an open library of AI prompts focused on image generation.
 
-First, run the development server:
+The goal of the project is to let users discover, publish, organize, and reuse prompts in a simple and visual way.  
+This MVP is focused on image prompts for tools like DALL·E, Midjourney, and Stable Diffusion, with a structure ready to support more prompt types in the future.
+
+## Features
+
+- Create and publish prompts
+- Explore prompts in a visual grid
+- View prompt details
+- Copy prompts with one click
+- Basic likes system
+- Responsive layout with navbar and footer
+
+## Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Supabase
+
+## Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+src/
+  app/
+  components/
+  lib/
+  types/
 ```
+## Getting Started
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository
+git clone https://github.com/Dvdrepetto/promptbook.git
+cd promptbook
+2. Install dependencies
+npm install
+3. Add environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a .env.local file in the project root:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+NEXT_PUBLIC_SUPABASE_URL=xxxx
+NEXT_PUBLIC_SUPABASE_ANON_KEY=xxx
+4. Run the development server
+npm run dev
 
-## Learn More
+Open:
 
-To learn more about Next.js, take a look at the following resources:
+http://localhost:3000
+Environment Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The .env.local file is required and should not be committed to Git.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Current Status
 
-## Deploy on Vercel
+This project is currently in MVP stage.
+The current version includes the core flow:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+create prompt
+explore prompts
+prompt detail page
+copy prompt
+basic likes
+Roadmap
+Authentication with Supabase
+Saved prompts
+User profiles
+Collections
+Comments
+Search and filters
+Prompt categories and tags
+Author
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+David Repetto
+
+LinkedIn: https://www.linkedin.com/in/davidrepetto1
+GitHub: https://github.com/Dvdrepetto
+Portfolio: https://david-repetto-portfolio.vercel.app/
