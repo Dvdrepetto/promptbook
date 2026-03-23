@@ -64,15 +64,6 @@ export async function toggleLikePrompt(promptId: string) {
     }
   }
 
-  const { count, error: countError } = await supabase
-    .from('prompt_likes')
-    .select('*', { count: 'exact', head: true })
-    .eq('prompt_id', promptId)
-
-  if (countError) {
-    throw new Error(countError.message)
-  }
-
   revalidatePath('/explore')
   revalidatePath(`/prompt/${promptId}`)
 }

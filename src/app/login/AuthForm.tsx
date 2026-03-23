@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { containsBlockedWords } from '@/lib/content-moderation'
 
@@ -58,6 +59,29 @@ export default function AuthForm() {
   const emailError = getEmailError(email)
   const passwordError = getPasswordError(password, mode)
   const formIsValid = !usernameError && !emailError && !passwordError
+
+  const handleOAuthSignIn = async (provider: 'github') => {
+    setLoading(true)
+    setMessage('')
+    setStatus('idle')
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/explore`,
+        },
+      })
+
+      if (error) throw error
+    } catch (error) {
+      const nextMessage =
+        error instanceof Error ? error.message : 'No se pudo iniciar con OAuth.'
+      setStatus('error')
+      setMessage(nextMessage)
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -160,6 +184,25 @@ export default function AuthForm() {
             ? 'Entra para publicar prompts, guardar tus ideas y seguir construyendo tu biblioteca.'
             : 'Empieza a publicar, organizar y reutilizar prompts desde una sola cuenta.'}
         </p>
+      </div>
+
+      <div className="space-y-3">
+        <button
+          type="button"
+          onClick={() => void handleOAuthSignIn('github')}
+          disabled={loading}
+          className="flex w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/8 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Continuar con GitHub
+        </button>
+      </div>
+
+      <div className="my-6 flex items-center gap-4">
+        <div className="h-px flex-1 bg-white/10" />
+        <span className="text-xs uppercase tracking-[0.25em] text-gray-500">
+          o
+        </span>
+        <div className="h-px flex-1 bg-white/10" />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -315,6 +358,16 @@ export default function AuthForm() {
           {message}
         </p>
       ) : null}
+
+      <p className="mt-5 text-xs leading-6 text-gray-500">
+        Al continuar, aceptas que la autenticacion se gestiona con Supabase y,
+        si eliges GitHub, tambien con ese proveedor. No almacenamos
+        contraseñas en texto plano en Promptbook. Lee nuestra{' '}
+        <Link href="/privacy" className="text-cyan-200 transition hover:text-white">
+          politica de privacidad
+        </Link>
+        .
+      </p>
 
       <div className="mt-8 grid gap-3 border-t border-white/10 pt-6 text-sm text-gray-400 sm:grid-cols-3">
         <div className="rounded-2xl border border-white/10 bg-white/3 p-3">

@@ -34,6 +34,12 @@ export default function Footer() {
                     >
                         Portfolio
                     </Link>
+                    <Link
+                        href="/privacy"
+                        className="transition hover:text-white"
+                    >
+                        Privacidad
+                    </Link>
                 </div>
             </div>
         </footer>
