@@ -3,12 +3,26 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { containsBlockedWords } from '@/lib/content-moderation'
 
 function getEmailError(email: string) {
   if (!email) return 'El email es obligatorio.'
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(email)) return 'Introduce un email valido.'
+
+  return ''
+}
+
+function getUsernameError(username: string, mode: 'login' | 'signup') {
+  if (mode === 'login') return ''
+  if (!username.trim()) return 'El nombre de usuario es obligatorio.'
+  if (username.trim().length < 3) {
+    return 'Usa al menos 3 caracteres para tu nombre de usuario.'
+  }
+  if (containsBlockedWords(username)) {
+    return 'El nombre de usuario incluye lenguaje no permitido.'
+  }
 
   return ''
 }
@@ -27,24 +41,27 @@ export default function AuthForm() {
   const router = useRouter()
 
   const [mode, setMode] = useState<'login' | 'signup'>('login')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [loading, setLoading] = useState(false)
   const [touched, setTouched] = useState({
+    username: false,
     email: false,
     password: false,
   })
 
   const isLogin = mode === 'login'
+  const usernameError = getUsernameError(username, mode)
   const emailError = getEmailError(email)
   const passwordError = getPasswordError(password, mode)
-  const formIsValid = !emailError && !passwordError
+  const formIsValid = !usernameError && !emailError && !passwordError
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setTouched({ email: true, password: true })
+    setTouched({ username: true, email: true, password: true })
 
     if (!formIsValid) {
       setStatus('error')
@@ -61,6 +78,11 @@ export default function AuthForm() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              username: username.trim(),
+            },
+          },
         })
 
         if (error) throw error
@@ -68,8 +90,9 @@ export default function AuthForm() {
         setStatus('success')
         setMessage('Cuenta creada correctamente. Ya puedes iniciar sesión.')
         setMode('login')
+        setUsername('')
         setPassword('')
-        setTouched({ email: true, password: false })
+        setTouched({ username: false, email: true, password: false })
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -92,8 +115,8 @@ export default function AuthForm() {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-neutral-950/80 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur xl:p-8">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+    <div className="relative overflow-hidden rounded-4xl border border-white/10 bg-neutral-950/80 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur xl:p-8">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/40 to-transparent" />
       <div className="pointer-events-none absolute -right-16 top-8 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
 
       <div className="mb-8">
@@ -106,9 +129,7 @@ export default function AuthForm() {
               setStatus('idle')
             }}
             className={`rounded-full px-4 py-2 transition ${
-              isLogin
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-300 hover:text-white'
+              isLogin ? 'bg-white text-black shadow-sm' : 'text-gray-300 hover:text-white'
             }`}
           >
             Entrar
@@ -122,9 +143,7 @@ export default function AuthForm() {
               setStatus('idle')
             }}
             className={`rounded-full px-4 py-2 transition ${
-              !isLogin
-                ? 'bg-white text-black shadow-sm'
-                : 'text-gray-300 hover:text-white'
+              !isLogin ? 'bg-white text-black shadow-sm' : 'text-gray-300 hover:text-white'
             }`}
           >
             Crear cuenta
@@ -144,6 +163,48 @@ export default function AuthForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {!isLogin ? (
+          <div className="space-y-2">
+            <label htmlFor="username" className="text-sm font-medium text-gray-200">
+              Nombre de usuario
+            </label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Ej: davidprompt"
+              value={username}
+              onBlur={() =>
+                setTouched((current) => ({ ...current, username: true }))
+              }
+              onChange={(e) => {
+                setUsername(e.target.value)
+                if (message) {
+                  setMessage('')
+                  setStatus('idle')
+                }
+              }}
+              aria-invalid={touched.username && !!usernameError}
+              aria-describedby="username-help"
+              className={`w-full rounded-2xl border px-4 py-3 text-white outline-none transition placeholder:text-gray-500 ${
+                touched.username && usernameError
+                  ? 'border-red-400/40 bg-red-500/10 focus:border-red-300'
+                  : 'border-white/10 bg-white/5 focus:border-cyan-300/70 focus:bg-white/8'
+              }`}
+              required={!isLogin}
+            />
+            <p
+              id="username-help"
+              className={`text-sm ${
+                touched.username && usernameError ? 'text-red-200' : 'text-gray-500'
+              }`}
+            >
+              {touched.username && usernameError
+                ? usernameError
+                : 'Este nombre se mostrara en tu sesion y mas adelante en tu perfil.'}
+            </p>
+          </div>
+        ) : null}
+
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium text-gray-200">
             Email
@@ -184,10 +245,7 @@ export default function AuthForm() {
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-200"
-            >
+            <label htmlFor="password" className="text-sm font-medium text-gray-200">
               Contraseña
             </label>
             <span className="text-xs text-gray-500">
@@ -222,9 +280,7 @@ export default function AuthForm() {
             <p
               id="password-help"
               className={`text-sm ${
-                touched.password && passwordError
-                  ? 'text-red-200'
-                  : 'text-gray-500'
+                touched.password && passwordError ? 'text-red-200' : 'text-gray-500'
               }`}
             >
               {touched.password && passwordError
@@ -234,9 +290,7 @@ export default function AuthForm() {
                   : 'Una contraseña mas larga suele ser mas segura.'}
             </p>
             {!isLogin ? (
-              <span className="text-xs text-cyan-200/80">
-                {password.length}/6 minimo
-              </span>
+              <span className="text-xs text-cyan-200/80">{password.length}/6 minimo</span>
             ) : null}
           </div>
         </div>
@@ -246,11 +300,7 @@ export default function AuthForm() {
           disabled={loading || !formIsValid}
           className="w-full rounded-2xl bg-white px-4 py-3 font-medium text-black transition hover:scale-[0.99] hover:bg-cyan-100 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading
-            ? 'Procesando...'
-            : isLogin
-              ? 'Iniciar sesion'
-              : 'Crear cuenta'}
+          {loading ? 'Procesando...' : isLogin ? 'Iniciar sesion' : 'Crear cuenta'}
         </button>
       </form>
 
@@ -267,13 +317,13 @@ export default function AuthForm() {
       ) : null}
 
       <div className="mt-8 grid gap-3 border-t border-white/10 pt-6 text-sm text-gray-400 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+        <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
           Publica prompts y compártelos rápido.
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+        <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
           Descubre ideas listas para reutilizar.
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+        <div className="rounded-2xl border border-white/10 bg-white/3 p-3">
           Gestiona tu colección desde un solo lugar.
         </div>
       </div>

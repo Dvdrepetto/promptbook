@@ -33,7 +33,7 @@ export default async function CreatePage() {
           </div>
 
           <div className="grid gap-4">
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-3xl border border-white/10 bg-white/3 p-5">
               <p className="text-sm font-medium text-white">
                 1. Elige una categoria
               </p>
@@ -41,7 +41,7 @@ export default async function CreatePage() {
                 Ayuda a que otros encuentren el prompt desde el contexto correcto.
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-3xl border border-white/10 bg-white/3 p-5">
               <p className="text-sm font-medium text-white">
                 2. Define la subcategoria
               </p>
@@ -49,7 +49,7 @@ export default async function CreatePage() {
                 Le da precision a la busqueda sin volverla complicada.
               </p>
             </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-3xl border border-white/10 bg-white/3 p-5">
               <p className="text-sm font-medium text-white">
                 3. Publica con buen contexto
               </p>
@@ -60,7 +60,7 @@ export default async function CreatePage() {
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-white/10 bg-neutral-950/85 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-8">
+        <div className="rounded-4xl border border-white/10 bg-neutral-950/85 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)] sm:p-8">
           <CreatePromptForm />
         </div>
       </div>

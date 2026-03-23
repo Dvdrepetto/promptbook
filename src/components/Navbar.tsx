@@ -7,6 +7,11 @@ export default async function Navbar() {
   const {
     data: { user },
   } = await supabase.auth.getUser()
+  const username =
+    typeof user?.user_metadata?.username === 'string' &&
+    user.user_metadata.username.trim()
+      ? user.user_metadata.username.trim()
+      : user?.email?.split('@')[0] || 'Usuario'
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/70 backdrop-blur-xl">
@@ -37,7 +42,7 @@ export default async function Navbar() {
         </div>
 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-          <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] p-1 text-sm text-gray-300">
+          <div className="flex flex-wrap items-center gap-2 rounded-full border border-white/10 bg-white/3 p-1 text-sm text-gray-300">
             <Link
               href="/explore"
               className="rounded-full px-4 py-2 transition hover:bg-white/8 hover:text-white"
@@ -55,11 +60,11 @@ export default async function Navbar() {
 
           {user ? (
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-gray-300">
+              <div className="rounded-full border border-white/10 bg-white/3 px-4 py-2 text-sm text-gray-300">
                 <span className="mr-2 text-xs uppercase tracking-[0.2em] text-gray-500">
                   Sesion
                 </span>
-                <span className="break-all text-white">{user.email}</span>
+                <span className="break-all text-white">{username}</span>
               </div>
               <LogoutButton />
             </div>

@@ -40,15 +40,21 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   const { data, error } = await query.order('created_at', { ascending: false })
 
   if (error) {
+    const isMissingCategoryColumn =
+      error.message.includes('column prompts.category does not exist') ||
+      error.message.includes('column "category" does not exist')
+
     return (
       <section className="relative isolate overflow-hidden py-10 sm:py-14">
         <div className="pointer-events-none absolute left-0 top-0 -z-10 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
-        <div className="rounded-[2rem] border border-red-400/20 bg-red-500/10 p-6 text-red-100">
+        <div className="rounded-4xl border border-red-400/20 bg-red-500/10 p-6 text-red-100">
           <p className="text-sm uppercase tracking-[0.2em] text-red-200/80">
             Error al cargar
           </p>
           <p className="mt-3 text-base leading-7">
-            No pudimos obtener los prompts. {error.message}
+            {isMissingCategoryColumn
+              ? 'Faltan aplicar las migraciones de Supabase para category y subcategory.'
+              : `No pudimos obtener los prompts. ${error.message}`}
           </p>
         </div>
       </section>
@@ -56,6 +62,26 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
   }
 
   const prompts = (data ?? []) as Prompt[]
+  const promptIds = prompts.map((prompt) => prompt.id)
+  const { data: likesData } = promptIds.length
+    ? await supabase
+        .from('prompt_likes')
+        .select('prompt_id')
+        .in('prompt_id', promptIds)
+    : { data: [] }
+
+  const likesCountByPrompt = (likesData ?? []).reduce<Record<string, number>>(
+    (acc, like) => {
+      acc[like.prompt_id] = (acc[like.prompt_id] ?? 0) + 1
+      return acc
+    },
+    {}
+  )
+
+  const promptsWithRealLikes = prompts.map((prompt) => ({
+    ...prompt,
+    likes_count: likesCountByPrompt[prompt.id] ?? 0,
+  }))
   const totalSubcategories = PROMPT_CATEGORIES.reduce(
     (total, category) => total + category.subcategories.length,
     0
@@ -90,7 +116,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/3 p-5">
               <p className="text-[2rem] leading-none font-semibold text-white">
                 {PROMPT_CATEGORIES.length}
               </p>
@@ -98,7 +124,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
                 categorias principales sugeridas
               </p>
             </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/3 p-5">
               <p className="text-[2rem] leading-none font-semibold text-white">
                 {totalSubcategories}
               </p>
@@ -106,7 +132,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
                 subcategorias para orientarte rapido
               </p>
             </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[1.75rem] border border-white/10 bg-white/3 p-5">
               <p className="text-[2rem] leading-none font-semibold text-white">
                 {prompts.length}
               </p>
@@ -117,7 +143,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+        <div className="rounded-4xl border border-white/10 bg-white/3 p-6 sm:p-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-medium uppercase tracking-[0.3em] text-gray-500">
@@ -172,7 +198,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             className={`rounded-full border px-4 py-2 text-sm transition ${
               !activeCategory
                 ? 'border-white/20 bg-white/10 text-white'
-                : 'border-white/10 bg-white/[0.03] text-gray-300 hover:bg-white/[0.08]'
+                : 'border-white/10 bg-white/3 text-gray-300 hover:bg-white/8'
             }`}
           >
             Ver todo
@@ -183,7 +209,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
               className={`rounded-full border px-4 py-2 text-sm transition ${
                 activeCategory && !activeSubcategory
                   ? 'border-white/20 bg-white/10 text-white'
-                  : 'border-white/10 bg-white/[0.03] text-gray-300 hover:bg-white/[0.08]'
+                  : 'border-white/10 bg-white/3 text-gray-300 hover:bg-white/8'
               }`}
             >
               {activeCategory.name}
@@ -192,7 +218,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         </div>
 
         <div className="grid gap-4 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-4xl border border-white/10 bg-white/3 p-6">
             <p className="text-xs font-medium uppercase tracking-[0.3em] text-gray-500">
               Como pensarlo
             </p>
@@ -206,7 +232,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             </p>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-4xl border border-white/10 bg-white/3 p-6">
             <p className="text-xs font-medium uppercase tracking-[0.3em] text-gray-500">
               Ejemplos de uso
             </p>
@@ -228,7 +254,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
         </div>
 
         {!prompts.length ? (
-          <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 text-center">
+          <div className="rounded-4xl border border-white/10 bg-white/3 p-8 text-center">
             <p className="text-sm uppercase tracking-[0.25em] text-gray-500">
               Biblioteca vacia
             </p>
@@ -261,7 +287,7 @@ export default async function ExplorePage({ searchParams }: ExplorePageProps) {
             </div>
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {prompts.map((prompt) => (
+              {promptsWithRealLikes.map((prompt) => (
                 <PromptCard key={prompt.id} prompt={prompt} />
               ))}
             </div>

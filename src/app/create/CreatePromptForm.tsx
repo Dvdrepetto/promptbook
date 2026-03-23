@@ -13,10 +13,16 @@ const TOOLS = [
   { value: 'midjourney', label: 'Midjourney' },
   { value: 'stable_diffusion', label: 'Stable Diffusion' },
 ]
+const MIN_TITLE_LENGTH = 4
+const MAX_TITLE_LENGTH = 120
+const MIN_PROMPT_LENGTH = 20
+const MAX_PROMPT_LENGTH = 5000
 
 export default function CreatePromptForm() {
-  const [category, setCategory] = useState(PROMPT_CATEGORIES[0]?.slug ?? '')
-  const [subcategory, setSubcategory] = useState(
+  const [category, setCategory] = useState<string>(
+    PROMPT_CATEGORIES[0]?.slug ?? ''
+  )
+  const [subcategory, setSubcategory] = useState<string>(
     PROMPT_CATEGORIES[0]?.subcategories[0]?.slug ?? ''
   )
 
@@ -38,9 +44,14 @@ export default function CreatePromptForm() {
             id="title"
             name="title"
             placeholder="Ej: Prompt para explicar un concepto dificil"
-            className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/60"
+            className="w-full rounded-2xl border border-white/10 bg-white/3 px-4 py-3 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/60"
+            minLength={MIN_TITLE_LENGTH}
+            maxLength={MAX_TITLE_LENGTH}
             required
           />
+          <p className="text-sm text-gray-500">
+            Entre {MIN_TITLE_LENGTH} y {MAX_TITLE_LENGTH} caracteres.
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -51,7 +62,7 @@ export default function CreatePromptForm() {
             id="tool"
             name="tool"
             defaultValue=""
-            className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
+            className="w-full rounded-2xl border border-white/10 bg-white/3 px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
           >
             {TOOLS.map((tool) => (
               <option key={tool.value} value={tool.value} className="bg-black">
@@ -83,7 +94,7 @@ export default function CreatePromptForm() {
               setCategory(nextCategory)
               setSubcategory(nextSubcategory)
             }}
-            className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
+            className="w-full rounded-2xl border border-white/10 bg-white/3 px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
             required
           >
             {PROMPT_CATEGORIES.map((item) => (
@@ -106,7 +117,7 @@ export default function CreatePromptForm() {
             name="subcategory"
             value={subcategory}
             onChange={(e) => setSubcategory(e.target.value)}
-            className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
+            className="w-full rounded-2xl border border-white/10 bg-white/3 px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
             required
           >
             {availableSubcategories.map((item) => (
@@ -118,7 +129,7 @@ export default function CreatePromptForm() {
         </div>
       </div>
 
-      <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-4 text-sm leading-7 text-gray-400">
+      <div className="rounded-3xl border border-white/10 bg-white/3 p-4 text-sm leading-7 text-gray-400">
         {selectedCategory ? selectedCategory.description : null}
       </div>
 
@@ -130,9 +141,14 @@ export default function CreatePromptForm() {
           id="prompt"
           name="prompt"
           placeholder="Escribe tu prompt con el mayor contexto posible..."
-          className="h-56 w-full rounded-[1.75rem] border border-white/10 bg-white/[0.03] px-4 py-4 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/60"
+          className="h-56 w-full rounded-[1.75rem] border border-white/10 bg-white/3 px-4 py-4 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/60"
+          minLength={MIN_PROMPT_LENGTH}
+          maxLength={MAX_PROMPT_LENGTH}
           required
         />
+        <p className="text-sm text-gray-500">
+          Entre {MIN_PROMPT_LENGTH} y {MAX_PROMPT_LENGTH} caracteres.
+        </p>
       </div>
 
       <button className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-cyan-100">
