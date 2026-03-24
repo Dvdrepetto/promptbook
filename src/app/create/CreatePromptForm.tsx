@@ -1,7 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import type { FormEvent } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { PROMPT_CATEGORIES } from '@/lib/prompt-categories'
 import { createPrompt } from '../actions/prompts'
 
@@ -23,6 +22,7 @@ const MIN_PROMPT_LENGTH = 20
 const MAX_PROMPT_LENGTH = 5000
 
 export default function CreatePromptForm() {
+  const formRef = useRef<HTMLFormElement>(null)
   const [category, setCategory] = useState<string>(
     PROMPT_CATEGORIES[0]?.slug ?? ''
   )
@@ -37,18 +37,18 @@ export default function CreatePromptForm() {
 
   const availableSubcategories = selectedCategory?.subcategories ?? []
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handlePublishClick = () => {
     const confirmed = window.confirm(
       'Esta seguro que quiere publicar este prompt?'
     )
 
-    if (!confirmed) {
-      event.preventDefault()
-    }
+    if (!confirmed) return
+
+    formRef.current?.requestSubmit()
   }
 
   return (
-    <form action={createPrompt} onSubmit={handleSubmit} className="space-y-6">
+    <form ref={formRef} action={createPrompt} className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="title" className="text-sm font-medium text-gray-200">
@@ -165,7 +165,11 @@ export default function CreatePromptForm() {
         </p>
       </div>
 
-      <button className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-cyan-100">
+      <button
+        type="button"
+        onClick={handlePublishClick}
+        className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-cyan-100"
+      >
         Publicar prompt
       </button>
     </form>
