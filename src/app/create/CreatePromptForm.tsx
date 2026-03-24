@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import type { FormEvent } from 'react'
 import { PROMPT_CATEGORIES } from '@/lib/prompt-categories'
 import { createPrompt } from '../actions/prompts'
 
@@ -9,6 +10,9 @@ const TOOLS = [
   { value: 'chatgpt', label: 'ChatGPT' },
   { value: 'claude', label: 'Claude' },
   { value: 'gemini', label: 'Gemini' },
+  { value: 'perplexity', label: 'Perplexity' },
+  { value: 'notebooklm', label: 'NotebookLM' },
+  { value: 'github_copilot', label: 'GitHub Copilot' },
   { value: 'dalle', label: 'DALL·E' },
   { value: 'midjourney', label: 'Midjourney' },
   { value: 'stable_diffusion', label: 'Stable Diffusion' },
@@ -33,8 +37,18 @@ export default function CreatePromptForm() {
 
   const availableSubcategories = selectedCategory?.subcategories ?? []
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const confirmed = window.confirm(
+      'Esta seguro que quiere publicar este prompt?'
+    )
+
+    if (!confirmed) {
+      event.preventDefault()
+    }
+  }
+
   return (
-    <form action={createPrompt} className="space-y-6">
+    <form action={createPrompt} onSubmit={handleSubmit} className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="title" className="text-sm font-medium text-gray-200">

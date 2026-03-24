@@ -40,6 +40,38 @@ from (
       7
     ),
     (
+      'Perplexity para investigar con fuentes',
+      'Actua como un asistente de investigacion con foco en fuentes confiables. Quiero que respondas esta pregunta con una sintesis clara, cites los puntos mas importantes y me digas que aspectos deberia verificar o profundizar despues.',
+      'perplexity',
+      'herramientas-ia',
+      'perplexity',
+      8
+    ),
+    (
+      'NotebookLM para resumir materiales',
+      'Voy a trabajar con apuntes, PDFs y notas. Quiero que me ayudes a transformar ese material en una sintesis practica con: ideas clave, citas utiles, conexiones entre conceptos, preguntas de repaso y posibles huecos de comprension.',
+      'notebooklm',
+      'herramientas-ia',
+      'notebooklm',
+      6
+    ),
+    (
+      'GitHub Copilot para implementar funciones',
+      'Ayudame a implementar esta funcionalidad como si fueras un compañero senior. Primero propone la estructura general, luego escribe el codigo, explica decisiones importantes y sugiere pruebas minimas para validar que no se rompio nada.',
+      'github_copilot',
+      'herramientas-ia',
+      'github-copilot',
+      9
+    ),
+    (
+      'DALL·E para visual publicitario',
+      'Create a polished advertising visual for a modern product launch, clean composition, cinematic light, realistic textures, premium brand feeling, subtle depth, sharp focus, editorial quality.',
+      'dalle',
+      'herramientas-ia',
+      'dalle',
+      11
+    ),
+    (
       'Midjourney editorial futuristic',
       'Futuristic editorial portrait of a creative entrepreneur in a minimalist studio, dramatic rim light, soft haze, premium fashion styling, cinematic framing, hyper detailed skin, modern magazine cover aesthetic --ar 4:5 --stylize 250',
       'midjourney',

@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import CopyButton from './CopyButton'
+import DeletePromptButton from './DeletePromptButton'
 import LikeButton from '../../../components/LikeButton'
+import ScrollToTop from './ScrollToTop'
 import {
   getCategoryBySlug,
   getSubcategoryBySlug,
@@ -54,9 +56,11 @@ export default async function PromptPage({ params }: PromptPageProps) {
       })
       .filter(Boolean)
       .slice(0, 6) ?? []
+  const canDeletePrompt = Boolean(user && prompt.user_id === user.id)
 
   return (
     <div className="mx-auto max-w-3xl p-6">
+      <ScrollToTop />
       <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <p className="text-sm text-gray-500">{prompt.tool || 'Sin herramienta'}</p>
@@ -76,6 +80,7 @@ export default async function PromptPage({ params }: PromptPageProps) {
             canLike={Boolean(user)}
           />
           <CopyButton text={prompt.prompt} />
+          {canDeletePrompt ? <DeletePromptButton promptId={prompt.id} /> : null}
         </div>
       </div>
 

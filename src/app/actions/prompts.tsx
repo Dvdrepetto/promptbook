@@ -9,6 +9,7 @@ import {
   isValidSubcategory,
 } from '@/lib/prompt-categories'
 import { validateCleanText } from '@/lib/content-moderation'
+import { ensureProfile } from '@/lib/ensure-profile'
 
 const MIN_TITLE_LENGTH = 4
 const MAX_TITLE_LENGTH = 120
@@ -18,6 +19,9 @@ const ALLOWED_TOOLS = new Set([
   'chatgpt',
   'claude',
   'gemini',
+  'perplexity',
+  'notebooklm',
+  'github_copilot',
   'dalle',
   'midjourney',
   'stable_diffusion',
@@ -33,6 +37,8 @@ export async function createPrompt(formData: FormData) {
   if (!user) {
     redirect('/login')
   }
+
+  await ensureProfile(supabase, user)
 
   const title = (formData.get('title') as string)?.trim()
   const prompt = (formData.get('prompt') as string)?.trim()
@@ -71,7 +77,24 @@ export async function createPrompt(formData: FormData) {
     throw new Error('La subcategoria seleccionada no es valida.')
   }
 
+  const { data: existingPrompt, error: existingPromptError } = await supabase
+    .from('prompts')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('title', title)
+    .eq('prompt', prompt)
+    .maybeSingle()
+
+  if (existingPromptError) {
+    throw new Error(existingPromptError.message)
+  }
+
+  if (existingPrompt) {
+    throw new Error('Ya publicaste un prompt igual. Revisa antes de volver a crear uno.')
+  }
+
   const { error } = await supabase.from('prompts').insert({
+    user_id: user.id,
     title,
     prompt,
     tool,
@@ -89,4 +112,40 @@ export async function createPrompt(formData: FormData) {
   redirect(
     `/explore?category=${categoryData?.slug}&subcategory=${subcategoryData?.slug}`
   )
+}
+
+export async function deletePrompt(promptId: string) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  await ensureProfile(supabase, user)
+
+  const { data: prompt, error: promptError } = await supabase
+    .from('prompts')
+    .select('id')
+    .eq('id', promptId)
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (promptError) {
+    throw new Error(promptError.message)
+  }
+
+  if (!prompt) {
+    throw new Error('No tienes permiso para eliminar este prompt.')
+  }
+
+  const { error } = await supabase.from('prompts').delete().eq('id', promptId)
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  redirect('/explore')
 }

@@ -3,19 +3,23 @@ export const PROMPT_CATEGORIES = [
     name: 'Herramientas IA',
     slug: 'herramientas-ia',
     description:
-      'Prompts para sacar mejor resultado de asistentes, modelos y generadores.',
+      'Prompts pensados para asistentes, buscadores, notebooks y generadores concretos.',
     subcategories: [
       { name: 'ChatGPT', slug: 'chatgpt' },
       { name: 'Claude', slug: 'claude' },
       { name: 'Gemini', slug: 'gemini' },
+      { name: 'Perplexity', slug: 'perplexity' },
+      { name: 'NotebookLM', slug: 'notebooklm' },
+      { name: 'GitHub Copilot', slug: 'github-copilot' },
+      { name: 'DALL·E', slug: 'dalle' },
       { name: 'Midjourney', slug: 'midjourney' },
     ],
   },
   {
-    name: 'Programacion',
+    name: 'Programacion y desarrollo',
     slug: 'programacion',
     description:
-      'Ayuda para escribir, refactorizar, depurar y documentar codigo.',
+      'Prompts para escribir, refactorizar, depurar, documentar y diseñar software.',
     subcategories: [
       { name: 'Debugging', slug: 'debugging' },
       { name: 'Refactor', slug: 'refactor' },
@@ -24,10 +28,10 @@ export const PROMPT_CATEGORIES = [
     ],
   },
   {
-    name: 'Academico',
+    name: 'Estudio y aprendizaje',
     slug: 'academico',
     description:
-      'Prompts para estudiar, resumir, practicar y preparar examenes.',
+      'Prompts para estudiar, resumir, practicar, investigar y preparar examenes.',
     subcategories: [
       { name: 'Resumir', slug: 'resumir' },
       { name: 'Explicar conceptos', slug: 'explicar-conceptos' },
@@ -36,10 +40,10 @@ export const PROMPT_CATEGORIES = [
     ],
   },
   {
-    name: 'Marketing',
+    name: 'Marketing y crecimiento',
     slug: 'marketing',
     description:
-      'Ideas para campañas, anuncios, copies y estrategia de contenido.',
+      'Prompts para campañas, anuncios, contenido y adquisicion de audiencia.',
     subcategories: [
       { name: 'Ads', slug: 'ads' },
       { name: 'Email marketing', slug: 'email-marketing' },
@@ -48,10 +52,10 @@ export const PROMPT_CATEGORIES = [
     ],
   },
   {
-    name: 'Negocios',
+    name: 'Negocio y estrategia',
     slug: 'negocios',
     description:
-      'Prompts para analisis, decisiones, propuestas y organizacion comercial.',
+      'Prompts para analisis, decisiones, propuestas, ventas y operaciones.',
     subcategories: [
       { name: 'Pitch decks', slug: 'pitch-decks' },
       { name: 'Analisis de mercado', slug: 'analisis-de-mercado' },
@@ -60,10 +64,10 @@ export const PROMPT_CATEGORIES = [
     ],
   },
   {
-    name: 'Productividad',
+    name: 'Productividad y sistemas',
     slug: 'productividad',
     description:
-      'Flujos para planificar mejor, organizar tareas y ahorrar tiempo.',
+      'Prompts para planificar, organizar tareas, documentar procesos y ahorrar tiempo.',
     subcategories: [
       { name: 'Planificacion', slug: 'planificacion' },
       { name: 'Notion', slug: 'notion' },
@@ -72,10 +76,10 @@ export const PROMPT_CATEGORIES = [
     ],
   },
   {
-    name: 'Creacion de contenido',
+    name: 'Contenido y medios',
     slug: 'creacion-de-contenido',
     description:
-      'Prompts para escribir, estructurar y mejorar contenido digital.',
+      'Prompts para escribir, estructurar y mejorar contenido en distintos formatos.',
     subcategories: [
       { name: 'Blog', slug: 'blog' },
       { name: 'YouTube', slug: 'youtube' },
@@ -99,7 +103,7 @@ export const PROMPT_CATEGORIES = [
     name: 'Educacion y docencia',
     slug: 'educacion-y-docencia',
     description:
-      'Material para clases, actividades, evaluaciones y aprendizaje guiado.',
+      'Prompts para clases, actividades, evaluaciones y aprendizaje guiado.',
     subcategories: [
       { name: 'Planeamiento', slug: 'planeamiento' },
       { name: 'Rubricas', slug: 'rubricas' },
