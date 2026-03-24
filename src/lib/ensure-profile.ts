@@ -22,13 +22,7 @@ export function getUserDisplayName(user: User) {
 }
 
 export async function ensureProfile(
-  supabase: {
-    from: (table: 'profiles') => {
-      upsert: (values: { id: string; username: string }) => {
-        select: () => Promise<{ error: { message: string } | null }>
-      }
-    }
-  },
+  supabase: any,
   user: User
 ) {
   const username = getUserDisplayName(user)
