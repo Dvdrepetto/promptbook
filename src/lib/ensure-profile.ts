@@ -24,16 +24,21 @@ export function getUserDisplayName(user: User) {
 export async function ensureProfile(
   supabase: {
     from: (table: 'profiles') => {
-      upsert: (values: { id: string; username: string }) => Promise<{ error: { message: string } | null }>
+      upsert: (values: { id: string; username: string }) => {
+        select: () => Promise<{ error: { message: string } | null }>
+      }
     }
   },
   user: User
 ) {
   const username = getUserDisplayName(user)
-  const { error } = await supabase.from('profiles').upsert({
-    id: user.id,
-    username,
-  })
+  const { error } = await supabase
+    .from('profiles')
+    .upsert({
+      id: user.id,
+      username,
+    })
+    .select()
 
   if (error) {
     throw new Error(error.message)

@@ -17,7 +17,7 @@ create policy "Authenticated users can create prompts"
 on public.prompts
 for insert
 to authenticated
-with check (auth.uid() = user_id);
+with check (auth.role() = 'authenticated');
 
 drop policy if exists "Users cannot update prompts yet" on public.prompts;
 drop policy if exists "Users can update their own prompts" on public.prompts;
