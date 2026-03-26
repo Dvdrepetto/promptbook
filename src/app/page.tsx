@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function HomePage() {
   return (
@@ -8,6 +9,17 @@ export default function HomePage() {
 
       <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
         <div>
+          <div className="mb-6 inline-flex rounded-[1.75rem] border border-white/10 bg-white/4 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
+            <Image
+              src="/promptbook-logo.svg"
+              alt="Promptbook"
+              width={260}
+              height={82}
+              className="h-auto w-[220px] sm:w-[260px]"
+              priority
+            />
+          </div>
+
           <p className="mb-5 text-xs font-medium uppercase tracking-[0.35em] text-cyan-300/75">
             Biblioteca abierta de prompts
           </p>
@@ -95,8 +107,8 @@ export default function HomePage() {
                   Ideal para
                 </p>
                 <p className="mt-2 text-sm leading-6 text-gray-300">
-                  Personas que trabajan con varios tipos de prompts en su dia a
-                  dia.
+                  Personas que trabajan con varios tipos de prompts y necesitan
+                  un lugar claro donde volver a encontrarlos.
                 </p>
               </div>
               <div className="rounded-[1.25rem] border border-white/10 bg-white/3 p-4">

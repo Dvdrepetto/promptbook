@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/server'
 import LogoutButton from '@/components/auth/LogoutButton'
 
@@ -18,15 +19,20 @@ export default async function Navbar() {
       <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="group inline-flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-sm font-semibold text-cyan-200 transition group-hover:border-cyan-300/40 group-hover:bg-cyan-400/10">
-              PB
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-2 transition group-hover:border-cyan-300/40 group-hover:bg-cyan-400/10">
+              <Image
+                src="/promptbook-mark.svg"
+                alt="Promptbook"
+                width={32}
+                height={32}
+              />
             </span>
             <div>
-              <p className="text-sm font-semibold tracking-[0.2em] text-white">
+              <p className="text-sm font-semibold tracking-[0.08em] text-white">
                 PROMPTBOOK
               </p>
               <p className="text-xs text-gray-500">
-                Biblioteca visual de prompts
+                Biblioteca inteligente de prompts
               </p>
             </div>
           </Link>

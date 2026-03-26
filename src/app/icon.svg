@@ -1,0 +1,17 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="promptbook-purple" x1="176" y1="48" x2="64" y2="208" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="#050505"/>
+  <path d="M74 55L129 84V204L74 177V55Z" fill="#223873"/>
+  <path d="M182 55L129 84V204L182 177V55Z" fill="url(#promptbook-purple)"/>
+  <path d="M74 55L129 84L182 55" fill="none" stroke="white" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M74 177L129 204L182 177" fill="none" stroke="white" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M129 84V204" stroke="white" stroke-width="9" stroke-linecap="round"/>
+  <path d="M106 107L151 127L106 147L113 127L106 107Z" fill="white"/>
+  <path d="M58 88H44V168H58" stroke="url(#promptbook-purple)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M198 88H212V168H198" stroke="url(#promptbook-purple)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

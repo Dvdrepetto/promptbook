@@ -1,4 +1,5 @@
 import AuthForm from './AuthForm'
+import Image from 'next/image'
 
 export default function LoginPage() {
     return (
@@ -8,10 +9,20 @@ export default function LoginPage() {
 
             <div className="mx-auto grid min-h-[72vh] max-w-6xl items-center gap-10 py-6 lg:grid-cols-[1.1fr_0.9fr] lg:py-12">
                 <div className="space-y-8">
-                    <div className="space-y-4">
-                        <p className="text-xs font-medium uppercase tracking-[0.35em] text-cyan-300/80">
-                            Acceso a tu biblioteca
-                        </p>
+                <div className="space-y-4">
+                    <div className="inline-flex rounded-[1.75rem] border border-white/10 bg-white/4 p-4 shadow-[0_16px_40px_rgba(0,0,0,0.22)]">
+                        <Image
+                            src="/promptbook-logo.svg"
+                            alt="Promptbook"
+                            width={240}
+                            height={76}
+                            className="h-auto w-[210px] sm:w-[240px]"
+                            priority
+                        />
+                    </div>
+                    <p className="text-xs font-medium uppercase tracking-[0.35em] text-cyan-300/80">
+                        Acceso a tu biblioteca
+                    </p>
                         <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">
                             Guarda, publica y reutiliza prompts con una experiencia mas clara.
                         </h1>

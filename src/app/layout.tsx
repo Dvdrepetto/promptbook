@@ -5,7 +5,12 @@ import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Promptbook',
-  description: 'Biblioteca abierta de prompts',
+  description: 'Biblioteca inteligente para descubrir, guardar y reutilizar prompts.',
+  icons: {
+    icon: '/promptbook-mark.svg',
+    shortcut: '/promptbook-mark.svg',
+    apple: '/promptbook-mark.svg',
+  },
 }
 
 export default function RootLayout({

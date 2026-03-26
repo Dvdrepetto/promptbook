@@ -1,0 +1,19 @@
+<svg width="760" height="240" viewBox="0 0 760 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="promptbook-purple" x1="176" y1="24" x2="64" y2="184" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A855F7"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(12 8)">
+    <path d="M74 24L129 53V173L74 146V24Z" fill="#223873"/>
+    <path d="M182 24L129 53V173L182 146V24Z" fill="url(#promptbook-purple)"/>
+    <path d="M74 24L129 53L182 24" fill="none" stroke="white" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M74 146L129 173L182 146" fill="none" stroke="white" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M129 53V173" stroke="white" stroke-width="9" stroke-linecap="round"/>
+    <path d="M106 76L151 96L106 116L113 96L106 76Z" fill="white"/>
+    <path d="M58 57H44V137H58" stroke="url(#promptbook-purple)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M198 57H212V137H198" stroke="url(#promptbook-purple)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="250" y="155" fill="#223873" font-family="ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="96" font-weight="700" letter-spacing="-3">Promptbook</text>
+</svg>
