@@ -30,8 +30,19 @@ function getUsernameError(username: string, mode: 'login' | 'signup') {
 
 function getPasswordError(password: string, mode: 'login' | 'signup') {
   if (!password) return 'La contraseña es obligatoria.'
-  if (mode === 'signup' && password.length < 6) {
-    return 'Usa al menos 6 caracteres para crear tu cuenta.'
+  if (mode === 'signup') {
+    if (password.length < 8) {
+      return 'Usa al menos 8 caracteres para crear una contraseña segura.'
+    }
+    if (!/[a-z]/.test(password)) {
+      return 'Incluye al menos una letra minuscula.'
+    }
+    if (!/[A-Z]/.test(password)) {
+      return 'Incluye al menos una letra mayuscula.'
+    }
+    if (!/\d/.test(password)) {
+      return 'Incluye al menos un numero.'
+    }
   }
 
   return ''
@@ -292,7 +303,7 @@ export default function AuthForm() {
               Contraseña
             </label>
             <span className="text-xs text-gray-500">
-              Minimo recomendado: 6 caracteres
+              Minimo seguro: 8 caracteres
             </span>
           </div>
           <input
@@ -317,6 +328,7 @@ export default function AuthForm() {
                 ? 'border-red-400/40 bg-red-500/10 focus:border-red-300'
                 : 'border-white/10 bg-white/5 focus:border-cyan-300/70 focus:bg-white/8'
             }`}
+            minLength={isLogin ? undefined : 8}
             required
           />
           <div className="flex items-center justify-between gap-4">
@@ -330,10 +342,10 @@ export default function AuthForm() {
                 ? passwordError
                 : isLogin
                   ? 'Introduce tu contraseña para continuar.'
-                  : 'Una contraseña mas larga suele ser mas segura.'}
+                  : 'Usa una mayuscula, una minuscula y un numero para crear una contraseña segura.'}
             </p>
             {!isLogin ? (
-              <span className="text-xs text-cyan-200/80">{password.length}/6 minimo</span>
+              <span className="text-xs text-cyan-200/80">{password.length}/8 minimo</span>
             ) : null}
           </div>
         </div>

@@ -23,6 +23,7 @@ const MAX_PROMPT_LENGTH = 5000
 
 export default function CreatePromptForm() {
   const formRef = useRef<HTMLFormElement>(null)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [category, setCategory] = useState<string>(
     PROMPT_CATEGORIES[0]?.slug ?? ''
   )
@@ -37,19 +38,15 @@ export default function CreatePromptForm() {
 
   const availableSubcategories = selectedCategory?.subcategories ?? []
 
-  const handlePublishClick = () => {
-    const confirmed = window.confirm(
-      'Esta seguro que quiere publicar este prompt?'
-    )
-
-    if (!confirmed) return
-
+  const handleConfirmPublish = () => {
+    setIsConfirmOpen(false)
     formRef.current?.requestSubmit()
   }
 
   return (
-    <form ref={formRef} action={createPrompt} className="space-y-6">
-      <div className="grid gap-6 lg:grid-cols-2">
+    <>
+      <form ref={formRef} action={createPrompt} className="space-y-6">
+        <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="title" className="text-sm font-medium text-gray-200">
             Titulo
@@ -85,9 +82,9 @@ export default function CreatePromptForm() {
             ))}
           </select>
         </div>
-      </div>
+        </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-2">
           <label
             htmlFor="category"
@@ -141,37 +138,77 @@ export default function CreatePromptForm() {
             ))}
           </select>
         </div>
-      </div>
+        </div>
 
-      <div className="rounded-3xl border border-white/10 bg-white/3 p-4 text-sm leading-7 text-gray-400">
-        {selectedCategory ? selectedCategory.description : null}
-      </div>
+        <div className="rounded-3xl border border-white/10 bg-white/3 p-4 text-sm leading-7 text-gray-400">
+          {selectedCategory ? selectedCategory.description : null}
+        </div>
 
-      <div className="space-y-2">
-        <label htmlFor="prompt" className="text-sm font-medium text-gray-200">
-          Prompt
-        </label>
-        <textarea
-          id="prompt"
-          name="prompt"
-          placeholder="Escribe tu prompt con el mayor contexto posible..."
-          className="h-56 w-full rounded-[1.75rem] border border-white/10 bg-white/3 px-4 py-4 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/60"
-          minLength={MIN_PROMPT_LENGTH}
-          maxLength={MAX_PROMPT_LENGTH}
-          required
-        />
-        <p className="text-sm text-gray-500">
-          Entre {MIN_PROMPT_LENGTH} y {MAX_PROMPT_LENGTH} caracteres.
-        </p>
-      </div>
+        <div className="space-y-2">
+          <label htmlFor="prompt" className="text-sm font-medium text-gray-200">
+            Prompt
+          </label>
+          <textarea
+            id="prompt"
+            name="prompt"
+            placeholder="Escribe tu prompt con el mayor contexto posible..."
+            className="h-56 w-full rounded-[1.75rem] border border-white/10 bg-white/3 px-4 py-4 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/60"
+            minLength={MIN_PROMPT_LENGTH}
+            maxLength={MAX_PROMPT_LENGTH}
+            required
+          />
+          <p className="text-sm text-gray-500">
+            Entre {MIN_PROMPT_LENGTH} y {MAX_PROMPT_LENGTH} caracteres.
+          </p>
+        </div>
 
-      <button
-        type="button"
-        onClick={handlePublishClick}
-        className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-cyan-100"
-      >
-        Publicar prompt
-      </button>
-    </form>
+        <button
+          type="button"
+          onClick={() => setIsConfirmOpen(true)}
+          className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-cyan-100"
+        >
+          Publicar prompt
+        </button>
+      </form>
+
+      {isConfirmOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-neutral-950/95 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+            <p className="text-xs font-medium uppercase tracking-[0.3em] text-cyan-300/75">
+              Confirmar publicacion
+            </p>
+            <h3 className="mt-3 text-2xl font-semibold tracking-tight text-white">
+              ¿Listo para publicar este prompt?
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-gray-400">
+              Revisa que el titulo, la herramienta y la categoria esten bien
+              antes de compartirlo en la biblioteca.
+            </p>
+
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/4 p-4 text-sm leading-6 text-gray-300">
+              Tu prompt quedara visible para otros usuarios de Promptbook y
+              podras eliminarlo mas adelante si eres el autor.
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setIsConfirmOpen(false)}
+                className="rounded-full border border-white/10 bg-white/4 px-5 py-3 text-sm font-medium text-white transition hover:bg-white/8"
+              >
+                Seguir editando
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmPublish}
+                className="rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-cyan-100"
+              >
+                Si, publicar prompt
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   )
 }
