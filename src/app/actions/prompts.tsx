@@ -27,6 +27,22 @@ const ALLOWED_TOOLS = new Set([
   'stable_diffusion',
 ])
 
+function normalizePromptTitle(value: string) {
+  const normalized = value.trim().replace(/\s+/g, ' ').toLowerCase()
+
+  if (!normalized) return normalized
+
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1)
+}
+
+function normalizePromptContent(value: string) {
+  return value
+    .trim()
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n[ \t]+/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+}
+
 export async function createPrompt(formData: FormData) {
   const supabase = await createClient()
 
@@ -40,11 +56,13 @@ export async function createPrompt(formData: FormData) {
 
   await ensureProfile(supabase, user)
 
-  const title = (formData.get('title') as string)?.trim()
-  const prompt = (formData.get('prompt') as string)?.trim()
+  const rawTitle = (formData.get('title') as string)?.trim()
+  const rawPrompt = (formData.get('prompt') as string)?.trim()
   const tool = ((formData.get('tool') as string) || null)?.trim() || null
   const category = (formData.get('category') as string)?.trim()
   const subcategory = (formData.get('subcategory') as string)?.trim()
+  const title = rawTitle ? normalizePromptTitle(rawTitle) : rawTitle
+  const prompt = rawPrompt ? normalizePromptContent(rawPrompt) : rawPrompt
 
   if (!title || !prompt || !category || !subcategory) {
     throw new Error('Faltan campos obligatorios.')
